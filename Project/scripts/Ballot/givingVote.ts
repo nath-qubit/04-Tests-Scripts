@@ -15,10 +15,13 @@ async function main() {
       ? ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
       : new ethers.Wallet(process.env.PRIVATE_KEY ?? EXPOSED_KEY);
   console.log(`Using address ${wallet.address}`);
-  const provider = ethers.providers.getDefaultProvider("ropsten");
+  const provider = ethers.providers.getDefaultProvider( "ropsten", { etherscan: process.env.ETHERSCAN_API_KEY} );
   const signer = wallet.connect(provider);
   const balanceBN = await signer.getBalance();
   const balance = Number(ethers.utils.formatEther(balanceBN));
+
+  console.log(process.argv);
+
   console.log(`Wallet balance ${balance}`);
   if (balance < 0.01) {
     throw new Error("Not enough ether");
