@@ -47,3 +47,4 @@ yarn run ts-node --files ./scripts/Ballot/getResult.ts
 URL - https://ropsten.etherscan.io/address/0xf7f2477fa656f9c0507c871d1ecb235bf8d3b8b8
 
 Screenshot:
+![Screenshot 2022-05-14 at 14 35 41](https://user-images.githubusercontent.com/89461715/168428342-e7ad0129-ccb0-4c8f-be8a-46093087ec9f.png)
