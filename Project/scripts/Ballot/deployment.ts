@@ -24,8 +24,6 @@ async function main() {
     process.env.MNEMONIC && process.env.MNEMONIC.length > 0
       ? ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
       : new ethers.Wallet(process.env.PRIVATE_KEY ?? EXPOSED_KEY);
-  // const provider = ethers.providers.getDefaultProvider("ropsten");
-  // const provider = ethers.providers.getDefaultProvider( "ropsten", { etherscan: "CNFTTPMDZXH68PGVY3NBVV2G1NMVZ436VQ"} );
   const provider = ethers.providers.getDefaultProvider( "ropsten", { etherscan: process.env.ETHERSCAN_API_KEY} );
   console.log(`Using address ${wallet.address}`);
   const signer = wallet.connect(provider);
@@ -46,7 +44,6 @@ async function main() {
   console.log("Awaiting confirmations");
   const deploymentTx = await ballotContract.deployed();
   console.log("Completed");
-  // console.log({ deploymentTx });
   for (let index = 0; index < PROPOSALS.length; index++) {
     const proposal = await ballotContract.proposals(index);
     console.log(
