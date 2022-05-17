@@ -6,6 +6,21 @@ contract Ballot {
     // This declares a new complex type which will
     // be used for variables later.
     // It will represent a single voter.
+
+    // Events syntax
+    event NewVoter(address indexed voter);
+
+    event Voted(address voter, uint256 proposal, uint256 weight);
+
+    event Delegated(
+        address voter,
+        address finalDelegate,
+        uint256 finalWeight,
+        bool voted,
+        uint256 proposal,
+        uint256 proposalVotes
+    );
+
     struct Voter {
         uint256 weight; // weight is accumulated by delegation
         bool voted; // if true, that person already voted
@@ -64,6 +79,7 @@ contract Ballot {
         require(!voters[voter].voted, "The voter already voted.");
         require(voters[voter].weight == 0);
         voters[voter].weight = 1;
+        emit NewVoter(voter);
     }
 
     /// Delegate your vote to the voter `to`.
@@ -101,10 +117,26 @@ contract Ballot {
             // If the delegate already voted,
             // directly add to the number of votes
             proposals[delegate_.vote].voteCount += sender.weight;
+            emit Delegated(
+                msg.sender,
+                to,
+                0,
+                true,
+                delegate_.vote,
+                proposals[delegate_.vote].voteCount
+            );
         } else {
             // If the delegate did not vote yet,
             // add to her weight.
             delegate_.weight += sender.weight;
+            emit Delegated(
+                msg.sender,
+                to,
+                delegate_.weight,
+                false,
+                0,
+                0
+            );
         }
     }
 
@@ -121,6 +153,7 @@ contract Ballot {
         // this will throw automatically and revert all
         // changes.
         proposals[proposal].voteCount += sender.weight;
+        emit Voted(msg.sender, proposal, sender.weight);
     }
 
     /// @dev Computes the winning proposal taking all
